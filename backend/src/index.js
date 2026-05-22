@@ -39,8 +39,19 @@ if (!fs.existsSync(uploadDir)) {
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
 // Simple check
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', database: 'connected' });
+app.get('/api/health', async (req, res) => {
+  try {
+    // Actually test the database connection
+    await prisma.user.findFirst();
+    res.json({ status: 'ok', database: 'connected' });
+  } catch (error) {
+    console.error('Database connection test failed:', error);
+    res.status(500).json({ 
+      status: 'error', 
+      database: 'disconnected', 
+      error: error.message 
+    });
+  }
 });
 
 // Import and use routes
