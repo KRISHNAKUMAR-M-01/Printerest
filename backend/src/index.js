@@ -10,11 +10,23 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
+  origin: (origin, callback) => {
+    // Dynamically allow any origin (required when credentials is true)
+    callback(null, true);
+  },
   credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Friendly Root Endpoint
+app.get('/', (req, res) => {
+  res.json({
+    message: "🚀 Printerest Backend API is running successfully!",
+    healthCheck: "/api/health",
+    status: "online"
+  });
+});
 
 // Ensure upload directory exists
 const fs = require('fs');
