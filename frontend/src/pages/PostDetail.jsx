@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Heart, Bookmark, Send, Trash2, ArrowLeft } from 'lucide-react';
-import api from '../utils/api';
+import api, { getBackendUrl } from '../utils/api';
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -149,7 +149,7 @@ const PostDetail = () => {
         {/* Left Section - Image */}
         <div className="detail-image-sec">
           <img
-            src={post.imageUrl.startsWith('http') ? post.imageUrl : `http://localhost:5001${post.imageUrl}`}
+            src={post.imageUrl.startsWith('http') ? post.imageUrl : `${getBackendUrl()}${post.imageUrl}`}
             alt={post.title}
             className="detail-image"
           />

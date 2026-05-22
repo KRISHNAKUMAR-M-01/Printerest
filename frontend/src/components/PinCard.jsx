@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Heart, Bookmark } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import api from '../utils/api';
+import api, { getBackendUrl } from '../utils/api';
 
 const PinCard = ({ post, onToggleSave, initialSaved = false, onLikeToggle }) => {
   const { isAuthenticated } = useAuth();
@@ -39,7 +39,7 @@ const PinCard = ({ post, onToggleSave, initialSaved = false, onLikeToggle }) => 
       <div className="pin-card" onClick={handleCardClick}>
         <div className="pin-img-wrapper">
           <img
-            src={post.imageUrl.startsWith('http') ? post.imageUrl : `http://localhost:5001${post.imageUrl}`}
+            src={post.imageUrl.startsWith('http') ? post.imageUrl : `${getBackendUrl()}${post.imageUrl}`}
             alt={post.title}
             className="pin-image"
             loading="lazy"

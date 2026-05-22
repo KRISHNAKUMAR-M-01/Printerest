@@ -1,4 +1,12 @@
-const BASE_URL = 'http://localhost:5001/api';
+export const getBackendUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl) {
+    return envUrl.endsWith('/') ? envUrl.slice(0, -1) : envUrl;
+  }
+  return 'http://localhost:5001';
+};
+
+const BASE_URL = `${getBackendUrl()}/api`;
 
 const getHeaders = (isMultipart = false) => {
   const headers = {};
