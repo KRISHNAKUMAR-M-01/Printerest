@@ -1,1 +1,24 @@
-FROM node:20-alpine\n\n# Set working directory\nWORKDIR /app\n\n# Install dependencies\nCOPY backend/package.json backend/package-lock.json ./\nRUN npm install\n\n# Copy source code\nCOPY backend/src ./src\n\n# Copy prisma schema and generate client\nCOPY backend/prisma ./prisma\nRUN npx prisma generate\n\n# Expose port (default 5001)\nEXPOSE 5001\n\n# Set environment variables (optional defaults)\nENV PORT=5001\n\n# Start the server\nCMD [ "node", "src/index.js" ]
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files and install dependencies
+COPY package.json package-lock.json* ./
+RUN npm install
+
+# Copy source code
+COPY src ./src
+
+# Copy prisma schema and generate client
+COPY prisma ./prisma
+RUN npx prisma generate
+
+# Expose port
+EXPOSE 5001
+
+# Set environment variables
+ENV PORT=5001
+
+# Start the server
+CMD [ "node", "src/index.js" ]
