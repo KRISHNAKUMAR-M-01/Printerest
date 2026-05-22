@@ -70,31 +70,30 @@ const getPosts = async (req, res) => {
       ];
     }
 
-    // Get posts and total count
-    const [posts, total] = await prisma.$transaction([
-      prisma.post.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-        skip,
-        take,
-        include: {
-          author: {
-            select: {
-              id: true,
-              username: true,
-              avatarUrl: true
-            }
-          },
-          _count: {
-            select: {
-              likes: true,
-              comments: true
-            }
+    // Get posts and total count separately (avoids MongoDB transaction requirement)
+    const posts = await prisma.post.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take,
+      include: {
+        author: {
+          select: {
+            id: true,
+            username: true,
+            avatarUrl: true
+          }
+        },
+        _count: {
+          select: {
+            likes: true,
+            comments: true
           }
         }
-      }),
-      prisma.post.count({ where })
-    ]);
+      }
+    });
+
+    const total = await prisma.post.count({ where });
 
     const hasMore = skip + posts.length < total;
 
